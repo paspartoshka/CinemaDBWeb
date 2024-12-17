@@ -1,0 +1,135 @@
+﻿@model IEnumerable<CinemaDBWeb.Models.Movie>
+
+@{
+    ViewData["Title"] = "Список Фильмов";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Добавить Новый Фильм</a>
+    <a asp-controller="Sessions" asp-action="Index" class="btn btn-primary">Перейти к списку сеансов</a>
+</p>
+<style>
+body {
+    background-color: #000000;
+    color: #FFFFFF; 
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+
+h1 {
+    color: #FFFFFF;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+        background-color: #444444;
+        border: none;
+        color: #FFFFFF;
+        padding: 8px 16px;
+        text-decoration: none;
+        margin: 0 5px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .btn-primary:hover {
+        background-color: #555555;
+    }
+
+
+.table {
+    width: 100%;
+    background-color: #333333;
+    color: #FFFFFF; 
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #444444; 
+    font-size: 16px;
+}
+
+.table th {
+    background-color: #444444; 
+}
+
+.table tr:nth-child(even) {
+    background-color: #3a3a3a; 
+}
+
+.table tr:hover {
+    background-color: #555555;
+    cursor: pointer;
+}
+
+
+a {
+    color: #1E90FF; 
+}
+
+a:hover {
+    color: #63B8FF;
+}
+
+
+img {
+    max-height: 100px;
+    max-width: 70px;
+    border-radius: 5px;
+}
+</style>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Длина (мин)</th>
+            <th>Компания</th>
+            <th>Режиссер</th>
+            <th>Дата Выхода</th>
+            <th>Страны</th>
+            <th>Постер</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Title</td>
+                <td>@movie.Length</td>
+                <td>@movie.Company?.Name</td>
+                <td>@movie.Director?.Person.Surname</td>
+                <td>@movie.ReleaseYear</td>
+                <td>
+                    @foreach (var country in movie.Countries)
+                    {
+                        @country.Name
+                        <br />
+                    }
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(movie.PosterFileName))
+                    {
+                        <img src="~/images/@movie.PosterFileName" alt="Постер" style="max-height:100px; max-width:70px;" />
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@movie.MovieId">Редактировать</a> |
+                    <a asp-action="Delete" asp-route-id="@movie.MovieId">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

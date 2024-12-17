@@ -1,0 +1,37 @@
+﻿@model CinemaDBWeb.Models.Session
+
+@{
+    ViewData["Title"] = "Редактировать Сеанс";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="SessionId" />
+    <div class="form-group">
+        <label for="Date">Дата и время сеанса</label>
+        <input asp-for="Date" class="form-control" type="datetime-local" value="@Model.Date.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Фильм</label>
+        <select asp-for="MovieId" asp-items="ViewBag.MovieId" class="form-control"></select>
+        <span asp-validation-for="MovieId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Зал</label>
+        <select asp-for="HallId" asp-items="ViewBag.HallId" class="form-control"></select>
+        <span asp-validation-for="HallId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Базовая цена</label>
+        <input asp-for="BasePrice" class="form-control" />
+        <span asp-validation-for="BasePrice" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

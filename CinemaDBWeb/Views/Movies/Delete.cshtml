@@ -1,0 +1,28 @@
+﻿@model CinemaDBWeb.Models.Movie
+
+@{
+    ViewData["Title"] = "Удалить Фильм";
+}
+
+<h1>Удалить Фильм</h1>
+
+<h3>Вы уверены, что хотите удалить этот фильм?</h3>
+
+<div>
+    <h4>@Model.Title (@Model.ReleaseYear)</h4>
+    <p>Компания: @Model.Company?.Name</p>
+    <p>Режиссёр: @Model.Director?.Person?.Surname</p>
+    <p>
+        Страны:
+        @foreach (var c in Model.Countries)
+        {
+            @c.Name
+        }
+    </p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="MovieId" />
+    <button type="submit" class="btn btn-danger">Удалить</button>
+    <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+</form>

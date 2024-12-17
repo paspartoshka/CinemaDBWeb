@@ -1,0 +1,69 @@
+﻿@model CinemaDBWeb.Models.Movie
+
+@{
+    ViewData["Title"] = "Редактирование Фильма";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="MovieId" />
+
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Length"></label>
+        <input asp-for="Length" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="LicPrice"></label>
+        <input asp-for="LicPrice" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="DaysIn"></label>
+        <input asp-for="DaysIn" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="AgeLimit"></label>
+        <input asp-for="AgeLimit" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Rating"></label>
+        <input asp-for="Rating" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ReleaseYear"></label>
+        <input asp-for="ReleaseYear" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CompanyId">Компания</label>
+        <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DirectorId">Режиссер</label>
+        <select asp-for="DirectorId" class="form-control" asp-items="ViewBag.DirectorId"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Страны</label>
+        <select name="CountryIds" class="form-control" asp-items="ViewBag.CountryIds" multiple></select>
+    </div>
+    <div class="form-group">
+        <label>Постер (JPG)</label>
+        <input type="file" name="poster" class="form-control" accept=".jpg,.jpeg" />
+        @if (!string.IsNullOrEmpty(Model.PosterFileName))
+        {
+            <div>
+                <img src="~/images/@Model.PosterFileName" alt="Постер" style="max-height:200px;max-width:150px;" />
+            </div>
+        }
+    </div>
+
+
+    <input type="submit" value="Сохранить" class="btn btn-primary" />
+    <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+</form>

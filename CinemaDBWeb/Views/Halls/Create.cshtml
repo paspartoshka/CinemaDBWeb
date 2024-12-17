@@ -1,0 +1,42 @@
+﻿@model CinemaDBWeb.Models.Hall
+
+@{
+    ViewData["Title"] = "Создать Зал";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Тип зала</label>
+        <input asp-for="HallType" class="form-control" />
+        <span asp-validation-for="HallType" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Количество рядов</label>
+        <input asp-for="RowCount" class="form-control" type="number" />
+        <span asp-validation-for="RowCount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Места в ряду</label>
+        <input asp-for="SeatCount" class="form-control" type="number" />
+        <span asp-validation-for="SeatCount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Множитель цены</label>
+        <input asp-for="PriceMult" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="PriceMult" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Тип проектора</label>
+        <input asp-for="ProjType" class="form-control" />
+        <span asp-validation-for="ProjType" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <!-- Ссылка назад к созданию сеанса, если нужно -->
+    <a asp-controller="Sessions" asp-action="Create" class="btn btn-secondary">Назад к созданию сеанса</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

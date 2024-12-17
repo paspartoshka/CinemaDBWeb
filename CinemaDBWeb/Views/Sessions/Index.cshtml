@@ -1,0 +1,122 @@
+﻿@model IEnumerable<CinemaDBWeb.Models.Session>
+@{
+    ViewData["Title"] = "Сеансы";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Добавить Новый Сеанс</a>
+    <a asp-controller="Movies" asp-action="Index" class="btn btn-primary">Перейти к списку фильмов</a>
+</p>
+
+<style>
+    body {
+        background-color: #000000;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+
+
+    h1 {
+        color: #FFFFFF;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        background-color: #444444;
+        border: none;
+        color: #FFFFFF;
+        padding: 8px 16px;
+        text-decoration: none;
+        margin: 0 5px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .btn-primary:hover {
+        background-color: #555555;
+    }
+
+
+    .table {
+        width: 100%;
+        background-color: #333333;
+        color: #FFFFFF;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        margin-top: 20px;
+    }
+
+    .table th, .table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #444444;
+        font-size: 16px;
+    }
+
+    .table th {
+        background-color: #444444;
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #3a3a3a;
+    }
+
+    .table tr:hover {
+        background-color: #555555;
+        cursor: pointer;
+    }
+
+
+    a {
+        color: #1E90FF;
+        text-decoration: none;
+        margin: 0 5px;
+    }
+
+    a:hover {
+        color: #63B8FF;
+    }
+
+
+    img {
+        max-height: 100px;
+        max-width: 70px;
+        border-radius: 5px;
+    }
+</style>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Фильм</th>
+            <th>Зал</th>
+            <th>Дата и время</th>
+            <th>Базовая цена</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var session in Model)
+        {
+            <tr>
+                <td>@session.Movie?.Title</td>
+                <td>@session.Hall?.HallType</td>
+                <td>@session.Date.ToString("g")</td>
+                <td>@session.BasePrice</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@session.SessionId">Редактировать</a> |
+                    <a asp-action="Delete" asp-route-id="@session.SessionId">Удалить</a> |
+                    <a asp-controller="Sessions" asp-action="Details" asp-route-id="@session.SessionId">Билеты</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

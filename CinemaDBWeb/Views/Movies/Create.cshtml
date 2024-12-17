@@ -1,0 +1,90 @@
+﻿@model CinemaDBWeb.Models.Movie
+
+@{
+    ViewData["Title"] = "Добавить Новый Фильм";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Length" class="control-label"></label>
+        <input asp-for="Length" class="form-control" />
+        <span asp-validation-for="Length" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="LicPrice" class="control-label"></label>
+        <input asp-for="LicPrice" class="form-control" />
+        <span asp-validation-for="LicPrice" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DaysIn" class="control-label"></label>
+        <input asp-for="DaysIn" class="form-control" />
+        <span asp-validation-for="DaysIn" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AgeLimit" class="control-label"></label>
+        <input asp-for="AgeLimit" class="form-control" />
+        <span asp-validation-for="AgeLimit" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Rating" class="control-label"></label>
+        <input asp-for="Rating" class="form-control" />
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ReleaseYear" class="control-label"></label>
+        <input asp-for="ReleaseYear" class="form-control" />
+        <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="CompanyId" class="control-label"></label>
+        <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+        <!-- Ссылка на добавление новой компании -->
+        <a asp-controller="Companies" asp-action="Create" class="btn btn-link">Добавить новую компанию</a>
+        <span asp-validation-for="CompanyId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DirectorId" class="control-label"></label>
+        <select asp-for="DirectorId" class="form-control" asp-items="ViewBag.DirectorId"></select>
+        <!-- Ссылка на добавление нового режиссёра -->
+        <a asp-controller="Directors" asp-action="Create" class="btn btn-link">Добавить нового режиссёра</a>
+        <span asp-validation-for="DirectorId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Страны</label>
+        <select name="CountryIds" class="form-control" multiple="multiple" asp-items="ViewBag.CountryIds"></select>
+        <!-- Ссылка на добавление новой страны -->
+        <a asp-controller="Countries" asp-action="Create" class="btn btn-link">Добавить новую страну</a>
+    </div>
+    <div class="form-group">
+        <label>Постер (JPG)</label>
+        <input type="file" name="poster" class="form-control" accept=".jpg,.jpeg" />
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Создать</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
