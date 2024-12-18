@@ -29,7 +29,7 @@ namespace CinemaDBWeb.Controllers
 
                 _context.Add(hall);
                 await _context.SaveChangesAsync();
-                // После создания зала можно сделать редирект назад на создание сеанса или на список залов:
+
                 return RedirectToAction("Create", "Sessions");
             return View(hall);
         }

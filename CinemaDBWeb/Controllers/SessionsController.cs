@@ -44,7 +44,7 @@ namespace CinemaDBWeb.Controllers
                 _context.Add(session);
                 await _context.SaveChangesAsync();
 
-                // После создания сеанса генерируем билеты
+
                 var hall = await _context.Halls.FirstOrDefaultAsync(h => h.HallId == session.HallId);
                 if (hall != null)
                 {
@@ -57,7 +57,7 @@ namespace CinemaDBWeb.Controllers
                                 SessionId = session.SessionId,
                                 RowNumb = r,
                                 SeatNumb = s,
-                                Price = session.BasePrice * hall.PriceMult, // например цена = базовая цена * множитель зала
+                                Price = session.BasePrice * hall.PriceMult, 
                                 isSold = false
                             };
                             _context.Tickets.Add(ticket);
@@ -98,28 +98,28 @@ namespace CinemaDBWeb.Controllers
 
             try
             {
-                // Update the session details
+
                 _context.Update(session);
                 await _context.SaveChangesAsync();
 
-                // Retrieve the associated hall to get PriceMult
+
                 var hall = await _context.Halls
                     .FirstOrDefaultAsync(h => h.HallId == session.HallId);
 
                 if (hall != null)
                 {
-                    // Fetch tickets that are not sold yet
+
                     var tickets = await _context.Tickets
                         .Where(t => t.SessionId == session.SessionId && !t.isSold)
                         .ToListAsync();
 
-                    // Update the price for each unsold ticket
+
                     foreach (var ticket in tickets)
                     {
                         ticket.Price = session.BasePrice * hall.PriceMult;
                     }
 
-                    // Save the updated ticket prices
+
                     _context.UpdateRange(tickets);
                     await _context.SaveChangesAsync();
                 }
@@ -167,16 +167,16 @@ namespace CinemaDBWeb.Controllers
             if (session == null)
                 return NotFound();
 
-            // Удаляем сначала билеты
+
             _context.Tickets.RemoveRange(session.Tickets);
 
-            // Теперь удаляем сам сеанс
+
             _context.Sessions.Remove(session);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        // Действие для покупки билета
+
         public async Task<IActionResult> BuyTicket(int ticketId)
         {
             var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == ticketId);
@@ -185,11 +185,10 @@ namespace CinemaDBWeb.Controllers
                 return NotFound();
             }
 
-            // Помечаем билет как проданный
             ticket.isSold = true;
             await _context.SaveChangesAsync();
 
-            // После покупки можно вернуть на страницу списка сеансов или на страницу деталей сеанса
+
             return RedirectToAction(nameof(Index));
         }
 

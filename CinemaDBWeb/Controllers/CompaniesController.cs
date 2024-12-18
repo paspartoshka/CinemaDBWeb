@@ -23,7 +23,7 @@ public class CompaniesController : Controller
         {
             _context.Add(company);
             await _context.SaveChangesAsync();
-            // После добавления компании - редирект на страницу создания фильма
+
             return RedirectToAction("Create", "Movies");
         }
         return View(company);

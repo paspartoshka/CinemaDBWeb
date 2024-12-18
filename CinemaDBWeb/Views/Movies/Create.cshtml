@@ -55,7 +55,7 @@
     <div class="form-group">
         <label asp-for="CompanyId" class="control-label"></label>
         <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
-        <!-- Ссылка на добавление новой компании -->
+
         <a asp-controller="Companies" asp-action="Create" class="btn btn-link">Добавить новую компанию</a>
         <span asp-validation-for="CompanyId" class="text-danger"></span>
     </div>
@@ -63,7 +63,7 @@
     <div class="form-group">
         <label asp-for="DirectorId" class="control-label"></label>
         <select asp-for="DirectorId" class="form-control" asp-items="ViewBag.DirectorId"></select>
-        <!-- Ссылка на добавление нового режиссёра -->
+
         <a asp-controller="Directors" asp-action="Create" class="btn btn-link">Добавить нового режиссёра</a>
         <span asp-validation-for="DirectorId" class="text-danger"></span>
     </div>
@@ -71,7 +71,7 @@
     <div class="form-group">
         <label>Страны</label>
         <select name="CountryIds" class="form-control" multiple="multiple" asp-items="ViewBag.CountryIds"></select>
-        <!-- Ссылка на добавление новой страны -->
+
         <a asp-controller="Countries" asp-action="Create" class="btn btn-link">Добавить новую страну</a>
     </div>
     <div class="form-group">

@@ -52,7 +52,7 @@ namespace CinemaDBWeb.Controllers
                 }
                 if (poster != null && poster.Length > 0)
                 {
-                    // Генерируем уникальное имя файла
+  
                     var fileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(poster.FileName);
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
 
@@ -65,7 +65,7 @@ namespace CinemaDBWeb.Controllers
                 }
 
             _context.Add(movie);
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
 
         }
@@ -98,7 +98,7 @@ namespace CinemaDBWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            // Загружаем фильм вместе с привязанными странами
+
             var movie = await _context.Movies
                 .Include(m => m.Countries)
                 .FirstOrDefaultAsync(m => m.MovieId == id);
@@ -108,17 +108,27 @@ namespace CinemaDBWeb.Controllers
                 return NotFound();
             }
 
-            // Очищаем коллекцию стран, чтобы убрать записи из таблицы связей
-            movie.Countries.Clear();
-            await _context.SaveChangesAsync(); // Сохраняем изменения (удаление связей)
 
-            // Теперь удаляем сам фильм
+
+
+            movie.Countries.Clear();
+            await _context.SaveChangesAsync();
+
+
+                var posterPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", movie.PosterFileName);
+                if (System.IO.File.Exists(posterPath))
+                {
+                        System.IO.File.Delete(posterPath);   
+                }
+            
+
+
             _context.Movies.Remove(movie);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
-        // Дополнительные действия (Edit, Details, Delete) можно добавить по необходимости
+
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -139,13 +149,13 @@ namespace CinemaDBWeb.Controllers
                 return NotFound();
             }
 
-            // Подготовка данных для выпадающих списков
+
             ViewData["CompanyId"] = new SelectList(_context.Companies, "CompanyId", "Name", movie.CompanyId);
-            // Для режиссеров: выбираем "Фамилию" через Person
+
             ViewData["DirectorId"] = new SelectList(_context.Directors
                 .Include(d => d.Person), "DirectorId", "Person.Surname", movie.DirectorId);
 
-            // Для стран: MultiSelectList с уже выбранными странами
+
             var selectedCountryIds = movie.Countries.Select(c => c.CountryId).ToList();
             ViewData["CountryIds"] = new MultiSelectList(_context.Countries, "CountryId", "Name", selectedCountryIds);
 
@@ -161,7 +171,7 @@ namespace CinemaDBWeb.Controllers
                 return NotFound();
             }
 
-            // Загружаем исходный объект из БД с его связанными коллекциями
+
             var movieToUpdate = await _context.Movies
                 .Include(m => m.Countries)
                 .FirstOrDefaultAsync(m => m.MovieId == id);
@@ -171,7 +181,7 @@ namespace CinemaDBWeb.Controllers
                 return NotFound();
             }
 
-            // Обновляем простые поля
+
             movieToUpdate.Title = movie.Title;
             movieToUpdate.Length = movie.Length;
             movieToUpdate.LicPrice = movie.LicPrice;
@@ -182,7 +192,7 @@ namespace CinemaDBWeb.Controllers
             movieToUpdate.CompanyId = movie.CompanyId;
             movieToUpdate.DirectorId = movie.DirectorId;
 
-            // Перезаписываем связанные страны
+
             movieToUpdate.Countries.Clear();
             foreach (var countryId in CountryIds)
             {
@@ -195,25 +205,28 @@ namespace CinemaDBWeb.Controllers
 
             if (poster != null && poster.Length > 0)
             {
-                // Если ранее был постер - можно при необходимости удалить старый файл
-                if (!string.IsNullOrEmpty(movieToUpdate.PosterFileName))
-                {
-                    var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", movieToUpdate.PosterFileName);
-                    if (System.IO.File.Exists(oldPath))
-                    {
-                        System.IO.File.Delete(oldPath);
-                    }
-                }
+                var postersDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(poster.FileName);
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                var newFileName = $"{Guid.NewGuid()}{Path.GetExtension(poster.FileName)}";
+                var newFilePath = Path.Combine(postersDirectory, newFileName);
+
+                using (var stream = new FileStream(newFilePath, FileMode.Create))
                 {
                     await poster.CopyToAsync(stream);
                 }
 
-                movieToUpdate.PosterFileName = fileName;
+           
+                    var oldFilePath = Path.Combine(postersDirectory, movieToUpdate.PosterFileName);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+
+                            System.IO.File.Delete(oldFilePath);                
+                   }
+                
+
+
+                movieToUpdate.PosterFileName = newFileName;
             }
 
 
