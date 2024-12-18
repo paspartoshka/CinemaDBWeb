@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 public class CountriesController : Controller
 {
-    private readonly CinemaDBContext _context;
+    private readonly CinemaDBStorage _storage;
 
-    public CountriesController(CinemaDBContext context)
+    public CountriesController(CinemaDBStorage storage)
     {
-        _context = context;
+        _storage = storage;
     }
 
     public IActionResult Create()
@@ -21,12 +21,7 @@ public class CountriesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Name")] Country country)
     {
-        if (ModelState.IsValid)
-        {
-            _context.Add(country);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Create", "Movies");
-        }
-        return View(country);
+        _storage.AddCountry(country);
+        return RedirectToAction("Create", "Movies");
     }
 }

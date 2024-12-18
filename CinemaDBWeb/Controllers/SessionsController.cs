@@ -11,27 +11,25 @@ namespace CinemaDBWeb.Controllers
 {
     public class SessionsController : Controller
     {
-        private readonly CinemaDBContext _context;
+        private readonly CinemaDBStorage _storage;
 
-        public SessionsController(CinemaDBContext context)
+        public SessionsController(CinemaDBStorage storage)
         {
-            _context = context;
+            _storage = storage;
         }
 
         // GET: Sessions
         public async Task<IActionResult> Index()
         {
-            var sessions = _context.Sessions
-                .Include(s => s.Movie)
-                .Include(s => s.Hall);
-            return View(await sessions.ToListAsync());
+            var sessions = _storage.GetSessions();
+            return View(sessions);
         }
 
         // GET: Sessions/Create
         public IActionResult Create()
         {
-            ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title");
-            ViewData["HallId"] = new SelectList(_context.Halls, "HallId", "HallType");
+            ViewData["MovieId"] = _storage.GetMovies();
+            ViewData["HallId"] = _storage.GetHalls();
             return View();
         }
 
@@ -40,51 +38,43 @@ namespace CinemaDBWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Date,BasePrice,MovieId,HallId")] Session session)
         {
-           
-                _context.Add(session);
-                await _context.SaveChangesAsync();
+            _storage.AddSession(session);
+            _storage.SaveChanges();
+            CreateTicketsForSession(session);
+            return RedirectToAction(nameof(Index));
+        }
 
-
-                var hall = await _context.Halls.FirstOrDefaultAsync(h => h.HallId == session.HallId);
-                if (hall != null)
+        private void CreateTicketsForSession(Session session)
+        {
+            var halls = _storage.GetHalls2();  // Преобразуем SelectList в список объектов Hall
+            var hall = halls.FirstOrDefault(h => h.HallId == session.HallId);  // Находим нужный зал
+            if (hall != null)
+            {
+                for (int r = 1; r <= hall.RowCount; r++)
                 {
-                    for (int r = 1; r <= hall.RowCount; r++)
+                    for (int s = 1; s <= hall.SeatCount; s++)
                     {
-                        for (int s = 1; s <= hall.SeatCount; s++)
+                        var ticket = new Ticket
                         {
-                            var ticket = new Ticket
-                            {
-                                SessionId = session.SessionId,
-                                RowNumb = r,
-                                SeatNumb = s,
-                                Price = session.BasePrice * hall.PriceMult, 
-                                isSold = false
-                            };
-                            _context.Tickets.Add(ticket);
-                        }
+                            SessionId = session.SessionId,
+                            RowNumb = r,
+                            SeatNumb = s,
+                            Price = session.BasePrice * hall.PriceMult,
+                            isSold = false
+                        };
+                        _storage.AddTicket(ticket);
                     }
-                    await _context.SaveChangesAsync();
                 }
-
-                return RedirectToAction(nameof(Index));
-            
-            ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", session.MovieId);
-            ViewData["HallId"] = new SelectList(_context.Halls, "HallId", "HallType", session.HallId);
-            return View(session);
+                _storage.SaveChanges();
+            }
         }
 
         // GET: Sessions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-                return NotFound();
-
-            var session = await _context.Sessions.FindAsync(id);
-            if (session == null)
-                return NotFound();
-
-            ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", session.MovieId);
-            ViewData["HallId"] = new SelectList(_context.Halls, "HallId", "HallType", session.HallId);
+            var session = _storage.GetSession(id.Value);
+            ViewData["MovieId"] = _storage.GetMovies();
+            ViewData["HallId"] = _storage.GetHalls();
             return View(session);
         }
 
@@ -93,65 +83,31 @@ namespace CinemaDBWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("SessionId,Date,BasePrice,MovieId,HallId")] Session session)
         {
-            if (id != session.SessionId)
-                return NotFound();
-
-            try
+            _storage.UpdateSession(session);
+            _storage.SaveChanges();
+            UpdateTicketPrices(session);
+            return RedirectToAction(nameof(Index));
+        }
+        private void UpdateTicketPrices(Session session)
+        {
+            var halls = _storage.GetHalls2();  // Преобразуем SelectList в список объектов Hall
+            var hall = halls.FirstOrDefault(h => h.HallId == session.HallId);  // Находим нужный зал
+            if (hall != null)
             {
-
-                _context.Update(session);
-                await _context.SaveChangesAsync();
-
-
-                var hall = await _context.Halls
-                    .FirstOrDefaultAsync(h => h.HallId == session.HallId);
-
-                if (hall != null)
+                var tickets = _storage.GetTicketsBySession(session.SessionId);
+                foreach (var ticket in tickets)
                 {
-
-                    var tickets = await _context.Tickets
-                        .Where(t => t.SessionId == session.SessionId && !t.isSold)
-                        .ToListAsync();
-
-
-                    foreach (var ticket in tickets)
-                    {
-                        ticket.Price = session.BasePrice * hall.PriceMult;
-                    }
-
-
-                    _context.UpdateRange(tickets);
-                    await _context.SaveChangesAsync();
+                    ticket.Price = session.BasePrice * hall.PriceMult;
+                    _storage.UpdateTicket(ticket);
                 }
+                _storage.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
-                {
-                    if (!SessionExists(session.SessionId))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction(nameof(Index));
-            
-
-            ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", session.MovieId);
-            ViewData["HallId"] = new SelectList(_context.Halls, "HallId", "HallType", session.HallId);
-            return View(session);
         }
 
         // GET: Sessions/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-                return NotFound();
-
-            var session = await _context.Sessions
-                .Include(s => s.Movie)
-                .Include(s => s.Hall)
-                .FirstOrDefaultAsync(m => m.SessionId == id);
-            if (session == null)
-                return NotFound();
-
+            var session = _storage.GetSession(id.Value);
             return View(session);
         }
 
@@ -160,56 +116,27 @@ namespace CinemaDBWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var session = await _context.Sessions
-                .Include(s => s.Tickets)
-                .FirstOrDefaultAsync(s => s.SessionId == id);
-
-            if (session == null)
-                return NotFound();
-
-
-            _context.Tickets.RemoveRange(session.Tickets);
-
-
-            _context.Sessions.Remove(session);
-            await _context.SaveChangesAsync();
+            _storage.RemoveSession(id);
+            _storage.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
 
         public async Task<IActionResult> BuyTicket(int ticketId)
         {
-            var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == ticketId);
-            if (ticket == null || ticket.isSold)
-            {
-                return NotFound();
-            }
-
-            ticket.isSold = true;
-            await _context.SaveChangesAsync();
-
-
+            _storage.BuyTicket(ticketId);
             return RedirectToAction(nameof(Index));
         }
 
         private bool SessionExists(int id)
         {
-            return _context.Sessions.Any(e => e.SessionId == id);
+            return _storage.GetSessions().Any(e => e.SessionId == id);
         }
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-                return NotFound();
-
-            var session = await _context.Sessions
-                .Include(s => s.Movie)
-                .Include(s => s.Tickets)
-                .FirstOrDefaultAsync(s => s.SessionId == id);
-
-            if (session == null)
-                return NotFound();
-
+            var session = _storage.GetSession(id.Value);
+            var tickets = _storage.GetTicketsBySession(id.Value);
             return View(session);
         }
     }

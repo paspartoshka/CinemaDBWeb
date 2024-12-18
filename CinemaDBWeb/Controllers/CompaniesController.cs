@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 public class CompaniesController : Controller
 {
-    private readonly CinemaDBContext _context;
-    public CompaniesController(CinemaDBContext context)
+    private readonly CinemaDBStorage _storage;
+    public CompaniesController(CinemaDBStorage storage)
     {
-        _context = context;
+        _storage = storage;
     }
 
     public IActionResult Create()
@@ -19,13 +19,7 @@ public class CompaniesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Name,Year")] Company company)
     {
-        if (ModelState.IsValid)
-        {
-            _context.Add(company);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Create", "Movies");
-        }
-        return View(company);
+        _storage.AddCompany(company);
+        return RedirectToAction("Create", "Movies");
     }
 }

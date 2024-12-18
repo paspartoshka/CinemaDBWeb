@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Регистрация контекста базы данных в DI контейнере
 builder.Services.AddDbContext<CinemaDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // Замените на ваш реальный строковый параметр соединения
+builder.Services.AddScoped<CinemaDBStorage>();
 
 
 

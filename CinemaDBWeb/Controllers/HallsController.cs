@@ -8,11 +8,11 @@ namespace CinemaDBWeb.Controllers
 {
     public class HallsController : Controller
     {
-        private readonly CinemaDBContext _context;
+        private readonly CinemaDBStorage _storage;
 
-        public HallsController(CinemaDBContext context)
+        public HallsController(CinemaDBStorage storage)
         {
-            _context = context;
+            _storage = storage;
         }
 
         // GET: Halls/Create
@@ -26,12 +26,8 @@ namespace CinemaDBWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("HallType,RowCount,SeatCount,PriceMult,ProjType")] Hall hall)
         {
-
-                _context.Add(hall);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Create", "Sessions");
-            return View(hall);
+            _storage.AddHall(hall);
+            return RedirectToAction("Create", "Sessions");
         }
     }
 }
