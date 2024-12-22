@@ -12,58 +12,65 @@
     <div class="form-group">
         <label asp-for="Title"></label>
         <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Length"></label>
         <input asp-for="Length" class="form-control" />
+        <span asp-validation-for="Length" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="LicPrice"></label>
         <input asp-for="LicPrice" class="form-control" />
+        <span asp-validation-for="LicPrice" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="DaysIn"></label>
         <input asp-for="DaysIn" class="form-control" />
+        <span asp-validation-for="DaysIn" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="AgeLimit"></label>
         <input asp-for="AgeLimit" class="form-control" />
+        <span asp-validation-for="AgeLimit" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Rating"></label>
         <input asp-for="Rating" class="form-control" />
+        <span asp-validation-for="Rating" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="ReleaseYear"></label>
         <input asp-for="ReleaseYear" class="form-control" />
+        <span asp-validation-for="ReleaseYear" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="CompanyId">Компания</label>
         <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+        <span asp-validation-for="CompanyId" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="DirectorId">Режиссер</label>
         <select asp-for="DirectorId" class="form-control" asp-items="ViewBag.DirectorId"></select>
+        <span asp-validation-for="DirectorId" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label>Страны</label>
         <select name="CountryIds" class="form-control" asp-items="ViewBag.CountryIds" multiple></select>
+        @Html.ValidationMessage("CountryIds", "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label>Постер (JPG)</label>
         <input type="file" name="poster" class="form-control" accept=".jpg,.jpeg" />
-        @if (!string.IsNullOrEmpty(Model.PosterFileName))
-        {
-            <div>
-                <img src="~/images/@Model.PosterFileName" alt="Постер" style="max-height:200px;max-width:150px;" />
-            </div>
-        }
+        @Html.ValidationMessage("poster", "", new { @class = "text-danger" })
     </div>
 
 
     <input type="submit" value="Сохранить" class="btn btn-primary" />
     <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
 </form>
+
+

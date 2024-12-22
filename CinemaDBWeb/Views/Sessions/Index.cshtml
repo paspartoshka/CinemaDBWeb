@@ -109,7 +109,16 @@
             <tr>
                 <td>@session.Movie?.Title</td>
                 <td>@session.Hall?.HallType</td>
-                <td>@session.Date.ToString("g")</td>
+                <td>
+                    @if (session.Date.HasValue)
+                    {
+                        @session.Date.Value.ToString("g")
+                    }
+                    else
+                    {
+                        @:Не указано
+                    }
+                </td>
                 <td>@session.BasePrice</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@session.SessionId">Редактировать</a> |

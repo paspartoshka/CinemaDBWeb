@@ -235,10 +235,10 @@ namespace CinemaDBWeb.Data
         public void AddDirector(string name, string surname)
         {
             var person = new Person { Name = name, Surname = surname, Job = "Director" };
-            _context.Add(person);
+            _context.Persons.Add(person);
             _context.SaveChanges();
-            var director = new Director { PersonId = person.PersonId };
-            _context.Add(director);
+            var director = new Director { PersonId = person.PersonId, Person = person };
+            _context.Directors.Add(director);
             _context.SaveChanges();
         }
 

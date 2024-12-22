@@ -21,7 +21,11 @@ public class CountriesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Name")] Country country)
     {
-        _storage.AddCountry(country);
-        return RedirectToAction("Create", "Movies");
+        if (ModelState.IsValid)
+        {
+            _storage.AddCountry(country);
+            return RedirectToAction("Create", "Movies");
+        }
+        return View();
     }
 }

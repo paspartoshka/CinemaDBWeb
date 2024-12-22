@@ -17,7 +17,16 @@
         <dd class="col-sm-10">@Model.Hall?.HallType</dd>
 
         <dt class="col-sm-2">Дата и время</dt>
-        <dd class="col-sm-10">@Model.Date.ToString("g")</dd>
+        <dd class="col-sm-10">
+            @if (Model.Date.HasValue)
+            {
+                @Model.Date.Value.ToString("g")
+            }
+            else
+            {
+                @:Не указано
+            }
+        </dd>
 
         <dt class="col-sm-2">Базовая цена</dt>
         <dd class="col-sm-10">@Model.BasePrice</dd>

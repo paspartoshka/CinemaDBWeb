@@ -19,9 +19,23 @@ public class DirectorsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(string Name, string Surname)
+    public async Task<IActionResult> Create(string? Name, string? Surname)
     {
-        _storage.AddDirector(Name, Surname);
-        return RedirectToAction("Create", "Movies");
+        if (string.IsNullOrEmpty(Name))
+        {
+            ModelState.AddModelError("Name", "Имя обязательно");
+        }
+        if (string.IsNullOrEmpty(Surname))
+        {
+            ModelState.AddModelError("Surname", "Фамилия обязательна");
+        }
+        if (!ModelState.IsValid)
+        {
+            return View();
+        }
+
+         _storage.AddDirector(Name, Surname);
+         return RedirectToAction("Create", "Movies");
+
     }
 }

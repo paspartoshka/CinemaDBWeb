@@ -37,11 +37,29 @@ namespace CinemaDBWeb.Controllers
         // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Length,LicPrice,DaysIn,AgeLimit,Rating,ReleaseYear,CompanyId,DirectorId")] Movie movie, int[] CountryIds, IFormFile poster)
+        public async Task<IActionResult> Create([Bind("Title,Length,LicPrice,DaysIn,AgeLimit,Rating,ReleaseYear,CompanyId,DirectorId")] Movie movie, int[] CountryIds, IFormFile? poster)
         {
-            var posterFileName = _storage.SavePoster(poster);
-            _storage.AddMovie(movie, CountryIds, posterFileName);
-            return RedirectToAction(nameof(Index));
+
+            if (CountryIds == null || CountryIds.Length == 0)
+            {
+                ModelState.AddModelError("CountryIds", "Пожалуйста, выберите хотя бы одну страну.");
+            }
+
+            if (poster == null || poster.Length == 0)
+            {
+                ModelState.AddModelError("poster", "Пожалуйста, загрузите постер.");
+            }
+            if (ModelState.IsValid)
+            {
+                var posterFileName = _storage.SavePoster(poster);
+                _storage.AddMovie(movie, CountryIds, posterFileName);
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewData["CompanyId"] = _storage.GetCompaniesSelectList();
+            ViewData["DirectorId"] = _storage.GetDirectorsSelectList();
+            ViewData["CountryIds"] = _storage.GetCountriesMultiSelectList();
+            return View(movie);
         }
 
         // GET: Movies/Delete/5
@@ -72,11 +90,27 @@ namespace CinemaDBWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MovieId,Title,Length,LicPrice,DaysIn,AgeLimit,Rating,ReleaseYear,CompanyId,DirectorId")] Movie movie, int[] CountryIds, IFormFile poster)
+        public async Task<IActionResult> Edit(int id, [Bind("MovieId,Title,Length,LicPrice,DaysIn,AgeLimit,Rating,ReleaseYear,CompanyId,DirectorId")] Movie movie, int[] CountryIds, IFormFile? poster)
         {
-            var movieToUpdate = _storage.GetMovie(id);
-            bool updateSuccess = _storage.UpdateMovie(movie, CountryIds, poster);
-            return RedirectToAction(nameof(Index));
+            if (CountryIds == null || CountryIds.Length == 0)
+            {
+                ModelState.AddModelError("CountryIds", "Пожалуйста, выберите хотя бы одну страну.");
+            }
+
+            if (poster == null || poster.Length == 0)
+            {
+                ModelState.AddModelError("poster", "Пожалуйста, загрузите постер.");
+            }
+            if (ModelState.IsValid)
+            {
+                var movieToUpdate = _storage.GetMovie(id);
+                bool updateSuccess = _storage.UpdateMovie(movie, CountryIds, poster);
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["CompanyId"] = _storage.GetCompaniesSelectList();
+            ViewData["DirectorId"] = _storage.GetDirectorsSelectList();
+            ViewData["CountryIds"] = _storage.GetCountriesMultiSelectList();
+            return View(movie);
         }
     }
 }

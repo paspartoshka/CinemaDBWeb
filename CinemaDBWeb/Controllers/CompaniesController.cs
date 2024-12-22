@@ -19,7 +19,11 @@ public class CompaniesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Name,Year")] Company company)
     {
-        _storage.AddCompany(company);
-        return RedirectToAction("Create", "Movies");
+        if (ModelState.IsValid)
+        {
+            _storage.AddCompany(company);
+            return RedirectToAction("Create", "Movies");
+        }
+        return View();
     }
 }

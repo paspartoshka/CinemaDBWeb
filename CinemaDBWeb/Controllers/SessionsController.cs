@@ -38,10 +38,16 @@ namespace CinemaDBWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Date,BasePrice,MovieId,HallId")] Session session)
         {
-            _storage.AddSession(session);
-            _storage.SaveChanges();
-            CreateTicketsForSession(session);
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                _storage.AddSession(session);
+                _storage.SaveChanges();
+                CreateTicketsForSession(session);
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["MovieId"] = _storage.GetMovies();
+            ViewData["HallId"] = _storage.GetHalls();
+            return View();
         }
 
         private void CreateTicketsForSession(Session session)
@@ -59,7 +65,7 @@ namespace CinemaDBWeb.Controllers
                             SessionId = session.SessionId,
                             RowNumb = r,
                             SeatNumb = s,
-                            Price = session.BasePrice * hall.PriceMult,
+                            Price = (session.BasePrice ?? 0) * (hall.PriceMult ?? 1),
                             isSold = false
                         };
                         _storage.AddTicket(ticket);
@@ -83,10 +89,16 @@ namespace CinemaDBWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("SessionId,Date,BasePrice,MovieId,HallId")] Session session)
         {
-            _storage.UpdateSession(session);
-            _storage.SaveChanges();
-            UpdateTicketPrices(session);
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                _storage.UpdateSession(session);
+                _storage.SaveChanges();
+                UpdateTicketPrices(session);
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["MovieId"] = _storage.GetMovies();
+            ViewData["HallId"] = _storage.GetHalls();
+            return View();
         }
         private void UpdateTicketPrices(Session session)
         {
@@ -97,7 +109,7 @@ namespace CinemaDBWeb.Controllers
                 var tickets = _storage.GetTicketsBySession(session.SessionId);
                 foreach (var ticket in tickets)
                 {
-                    ticket.Price = session.BasePrice * hall.PriceMult;
+                    ticket.Price = (session.BasePrice ?? 0) * (hall.PriceMult ?? 1);
                     _storage.UpdateTicket(ticket);
                 }
                 _storage.SaveChanges();

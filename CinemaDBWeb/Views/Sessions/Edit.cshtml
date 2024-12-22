@@ -10,7 +10,8 @@
     <input type="hidden" asp-for="SessionId" />
     <div class="form-group">
         <label for="Date">Дата и время сеанса</label>
-        <input asp-for="Date" class="form-control" type="datetime-local" value="@Model.Date.ToString("yyyy-MM-ddTHH:mm")" />
+        <input asp-for="Date" class="form-control" type="datetime-local"
+               value="@(Model.Date.HasValue ? Model.Date.Value.ToString("yyyy-MM-ddTHH:mm") : "")" />
         <span asp-validation-for="Date" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -35,3 +36,4 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+

@@ -26,8 +26,16 @@ namespace CinemaDBWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("HallType,RowCount,SeatCount,PriceMult,ProjType")] Hall hall)
         {
-            _storage.AddHall(hall);
-            return RedirectToAction("Create", "Sessions");
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine(error.ErrorMessage);
+            }
+            if (ModelState.IsValid)
+            {
+                _storage.AddHall(hall);
+                return RedirectToAction("Create", "Sessions");
+            }
+            return View();
         }
     }
 }

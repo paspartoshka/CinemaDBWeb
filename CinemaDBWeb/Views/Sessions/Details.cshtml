@@ -4,7 +4,17 @@
     ViewData["Title"] = "Детали Сеанса и Билеты";
 }
 
-<h1>@Model.Movie.Title - @Model.Date.ToString("dd.MM.yyyy HH:mm")</h1>
+<h1>
+    @Model.Movie.Title -
+    @if (Model.Date.HasValue)
+    {
+        @Model.Date.Value.ToString("dd.MM.yyyy HH:mm")
+    }
+    else
+    {
+        @:Не указано
+    }
+</h1>
 
 
 <p>
