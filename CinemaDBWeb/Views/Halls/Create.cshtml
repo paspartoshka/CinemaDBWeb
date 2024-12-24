@@ -4,6 +4,93 @@
     ViewData["Title"] = "Создать Зал";
 }
 
+<style>
+    body {
+        background-color: #000000;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+
+    h1 {
+        color: #FFFFFF;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        background-color: #444444;
+        border: none;
+        color: #FFFFFF;
+        padding: 8px 16px;
+        text-decoration: none;
+        margin: 0 5px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+        .btn-primary:hover {
+            background-color: #555555;
+        }
+
+    .form-control {
+        background-color: #333333;
+        border: 1px solid #555555;
+        color: #FFFFFF;
+    }
+
+        .form-control:focus {
+            background-color: #444444;
+            border-color: #666666;
+            color: #FFFFFF;
+        }
+
+    .form-group label {
+        color: #FFFFFF;
+    }
+
+    .text-danger {
+        color: #FF6347;
+    }
+
+    a {
+        color: #1E90FF;
+    }
+
+        a:hover {
+            color: #63B8FF;
+        }
+
+    img {
+        max-height: 100px;
+        max-width: 70px;
+        border-radius: 5px;
+    }
+
+    /* Дополнительные стили для улучшения внешнего вида формы */
+    form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #1a1a1a;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-link {
+        color: #1E90FF;
+        padding: 0;
+        font-size: 14px;
+    }
+
+        .btn-link:hover {
+            color: #63B8FF;
+            text-decoration: underline;
+        }
+</style>
+
 <h1>@ViewData["Title"]</h1>
 
 <form asp-action="Create" method="post">

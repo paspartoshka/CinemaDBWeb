@@ -3,6 +3,92 @@
 @{
     ViewData["Title"] = "Добавить Новый Фильм";
 }
+<style>
+    body {
+        background-color: #000000;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+
+    h1 {
+        color: #FFFFFF;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        background-color: #444444;
+        border: none;
+        color: #FFFFFF;
+        padding: 8px 16px;
+        text-decoration: none;
+        margin: 0 5px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+        .btn-primary:hover {
+            background-color: #555555;
+        }
+
+    .form-control {
+        background-color: #333333;
+        border: 1px solid #555555;
+        color: #FFFFFF;
+    }
+
+        .form-control:focus {
+            background-color: #444444;
+            border-color: #666666;
+            color: #FFFFFF;
+        }
+
+    .form-group label {
+        color: #FFFFFF;
+    }
+
+    .text-danger {
+        color: #FF6347;
+    }
+
+    a {
+        color: #1E90FF;
+    }
+
+        a:hover {
+            color: #63B8FF;
+        }
+
+    img {
+        max-height: 100px;
+        max-width: 70px;
+        border-radius: 5px;
+    }
+
+    /* Дополнительные стили для улучшения внешнего вида формы */
+    form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #1a1a1a;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-link {
+        color: #1E90FF;
+        padding: 0;
+        font-size: 14px;
+    }
+
+        .btn-link:hover {
+            color: #63B8FF;
+            text-decoration: underline;
+        }
+</style>
 
 <h1>@ViewData["Title"]</h1>
 
@@ -10,50 +96,50 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="form-group">
-        <label asp-for="Title" class="control-label"></label>
+        <label>Название фильма</label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Length" class="control-label"></label>
+        <label>Длительность</label>
         <input asp-for="Length" class="form-control" />
         <span asp-validation-for="Length" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="LicPrice" class="control-label"></label>
+        <label>Цена лицензии</label>
         <input asp-for="LicPrice" class="form-control" />
         <span asp-validation-for="LicPrice" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="DaysIn" class="control-label"></label>
+        <label>Дней в прокате</label>
         <input asp-for="DaysIn" class="form-control" />
         <span asp-validation-for="DaysIn" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="AgeLimit" class="control-label"></label>
+        <label>Возрастное ограничение</label>
         <input asp-for="AgeLimit" class="form-control" />
         <span asp-validation-for="AgeLimit" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Rating" class="control-label"></label>
+        <label>Тейтинг</label>
         <input asp-for="Rating" class="form-control" />
         <span asp-validation-for="Rating" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="ReleaseYear" class="control-label"></label>
+        <label>Год выхода</label>
         <input asp-for="ReleaseYear" class="form-control" />
         <span asp-validation-for="ReleaseYear" class="text-danger"></span>
     </div>
 
 
     <div class="form-group">
-        <label asp-for="CompanyId" class="control-label"></label>
+        <label>Компания</label>
         <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
 
         <a asp-controller="Companies" asp-action="Create" class="btn btn-link">Добавить новую компанию</a>
@@ -61,7 +147,7 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="DirectorId" class="control-label"></label>
+        <label>Режиссёр</label>
         <select asp-for="DirectorId" class="form-control" asp-items="ViewBag.DirectorId"></select>
 
         <a asp-controller="Directors" asp-action="Create" class="btn btn-link">Добавить нового режиссёра</a>

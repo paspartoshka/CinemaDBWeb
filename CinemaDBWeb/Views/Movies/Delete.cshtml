@@ -4,6 +4,115 @@
     ViewData["Title"] = "Удалить Фильм";
 }
 
+<style>
+    body {
+        background-color: #000000;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+
+    h1 {
+        color: #FFFFFF;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .btn-danger {
+        background-color: #444444;
+        border: none;
+        color: #FFFFFF;
+        padding: 8px 16px;
+        text-decoration: none;
+        margin: 0 5px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .btn-danger:hover {
+        background-color: #555555;
+    }
+
+    .btn-secondary {
+        background-color: #333333;
+        border: none;
+        color: #FFFFFF;
+        padding: 8px 16px;
+        text-decoration: none;
+        margin: 0 5px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .btn-secondary:hover {
+        background-color: #444444;
+    }
+
+    .table {
+        width: 100%;
+        background-color: #333333;
+        color: #FFFFFF;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        margin-bottom: 20px;
+    }
+
+    .table th, .table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #444444;
+        font-size: 16px;
+    }
+
+    .table th {
+        background-color: #444444;
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #3a3a3a;
+    }
+
+    .table tr:hover {
+        background-color: #555555;
+    }
+
+    a {
+        color: #1E90FF;
+    }
+
+    a:hover {
+        color: #63B8FF;
+    }
+
+    img {
+        max-height: 100px;
+        max-width: 70px;
+        border-radius: 5px;
+    }
+
+    .delete-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #1a1a1a;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .delete-container h3 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .delete-details {
+        margin-bottom: 20px;
+    }
+</style>
+
 <h1>Удалить Фильм</h1>
 
 <h3>Вы уверены, что хотите удалить этот фильм?</h3>
