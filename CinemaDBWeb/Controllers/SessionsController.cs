@@ -52,8 +52,8 @@ namespace CinemaDBWeb.Controllers
 
         private void CreateTicketsForSession(Session session)
         {
-            var halls = _storage.GetHalls2();  // Преобразуем SelectList в список объектов Hall
-            var hall = halls.FirstOrDefault(h => h.HallId == session.HallId);  // Находим нужный зал
+            var halls = _storage.GetHalls2();  
+            var hall = halls.FirstOrDefault(h => h.HallId == session.HallId);  
             if (hall != null)
             {
                 for (int r = 1; r <= hall.RowCount; r++)
@@ -102,8 +102,8 @@ namespace CinemaDBWeb.Controllers
         }
         private void UpdateTicketPrices(Session session)
         {
-            var halls = _storage.GetHalls2();  // Преобразуем SelectList в список объектов Hall
-            var hall = halls.FirstOrDefault(h => h.HallId == session.HallId);  // Находим нужный зал
+            var halls = _storage.GetHalls2(); 
+            var hall = halls.FirstOrDefault(h => h.HallId == session.HallId);  
             if (hall != null)
             {
                 var tickets = _storage.GetTicketsBySession(session.SessionId);

@@ -59,11 +59,9 @@ namespace CinemaDBWeb.Data
         {
             var movie = GetMovieWithCountries(movieId);
 
-            // Очистка связанных сущностей (например, стран)
             movie.Countries.Clear();
             _context.SaveChanges();
 
-            // Удаление постера
             var posterPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", movie.PosterFileName);
             if (System.IO.File.Exists(posterPath))
             {
@@ -86,7 +84,6 @@ namespace CinemaDBWeb.Data
         }
 
 
-        // Добавление стран к фильму
         public void AddCountriesToMovie(Movie movie, int[] countryIds)
         {
             foreach (var countryId in countryIds)
@@ -100,7 +97,7 @@ namespace CinemaDBWeb.Data
             _context.SaveChanges();
         }
 
-        // Сохранение постера
+
         public string SavePoster(IFormFile poster)
         {
             if (poster == null || poster.Length == 0)
@@ -119,7 +116,7 @@ namespace CinemaDBWeb.Data
             return fileName;
         }
 
-        // Удаление постера
+
         public void DeletePoster(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -140,7 +137,7 @@ namespace CinemaDBWeb.Data
         }
 
 
-        // Обновление фильма
+
         public bool UpdateMovie(Movie movie, int[] countryIds, IFormFile poster)
         {
             var movieToUpdate = GetMovie(movie.MovieId);
@@ -156,7 +153,7 @@ namespace CinemaDBWeb.Data
             movieToUpdate.CompanyId = movie.CompanyId;
             movieToUpdate.DirectorId = movie.DirectorId;
 
-            // Обновление стран
+
             movieToUpdate.Countries.Clear();
             var countries = GetCountriesByIds(countryIds);
             foreach (var country in countries)
@@ -164,7 +161,7 @@ namespace CinemaDBWeb.Data
                 movieToUpdate.Countries.Add(country);
             }
 
-            // Обработка изображения постера
+
             if (poster != null && poster.Length > 0)
             {
                 var postersDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
@@ -177,7 +174,6 @@ namespace CinemaDBWeb.Data
                     poster.CopyTo(stream);
                 }
 
-                // Удаление старого постера
                 if (!string.IsNullOrEmpty(movieToUpdate.PosterFileName))
                 {
                     var oldFilePath = Path.Combine(postersDirectory, movieToUpdate.PosterFileName);
@@ -194,19 +190,19 @@ namespace CinemaDBWeb.Data
             return true;
         }
 
-        // Метод для получения всех компаний
+
         public SelectList GetCompaniesSelectList()
         {
             return new SelectList(_context.Companies, "CompanyId", "Name");
         }
 
-        // Метод для получения списка директоров
+
         public SelectList GetDirectorsSelectList()
         {
             return new SelectList(_context.Directors.Include(d => d.Person), "DirectorId", "Person.Surname");
         }
 
-        // Метод для получения списка стран
+
         public MultiSelectList GetCountriesMultiSelectList()
         {
             return new MultiSelectList(_context.Countries, "CountryId", "Name");
@@ -258,7 +254,7 @@ namespace CinemaDBWeb.Data
 
         public IEnumerable<Hall> GetHalls2()
         {
-            return _context.Halls.ToList(); // Возвращаем список объектов Hall
+            return _context.Halls.ToList(); 
         }
         public IEnumerable<Session> GetSessions()
         {
